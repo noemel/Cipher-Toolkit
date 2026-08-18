@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Asymmetric Cipher</title>
+<style>
+  :root {
+    --bg: #1e1e2e;
+    --panel: #282838;
+    --accent: #7aa2f7;
+    --text: #e0e0f0;
+    --muted: #9a9ab0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--text);
+    padding: 20px;
+  }
+  .card {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 32px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin: 0 0 20px;
+    text-align: center;
+    color: var(--accent);
+  }
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    margin-top: 16px;
+  }
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #3a3a4d;
+    background: #1a1a26;
+    color: var(--text);
+    font-size: 1rem;
+  }
+  input:focus { outline: 2px solid var(--accent); }
+  button {
+    margin-top: 22px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #1a1a26;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.9; }
+  .result {
+    margin-top: 22px;
+    background: #1a1a26;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    display: none;
+  }
+  .result h2 {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  .summary p { margin: 6px 0; word-break: break-word; }
+  .summary span { color: var(--muted); }
+  .summary strong { color: var(--accent); }
+  .path-log {
+    margin-top: 14px;
+    max-height: 260px;
+    overflow-y: auto;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    border-top: 1px solid #3a3a4d;
+    padding-top: 10px;
+  }
+  .path-log div { padding: 2px 0; color: var(--text); }
+  .path-log .steps { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Asymmetric Cipher</h1>
+
+  <label for="phrase">Enter a phrase</label>
+  <input type="text" id="phrase" placeholder="Hello World">
+
+  <label for="key">Enter the key</label>
+  <input type="number" id="key" value="3">
+
+  <button onclick="run()">Encrypt / Decrypt</button>
+
+  <div class="result" id="result">
+    <div class="summary">
+      <p><span>Encrypted:</span> <strong id="encryptedOut"></strong></p>
+      <p><span>Decrypted:</span> <strong id="decryptedOut"></strong></p>
+    </div>
+    <h2>Decryption (move forward until the correct letter):</h2>
+    <div class="path-log" id="pathLog"></div>
+  </div>
+</div>
+
+<script>
+  function isLetter(ch) {
+    return /[a-zA-Z]/.test(ch);
+  }
+
+  function shiftLetter(ch, shift) {
+    if (!isLetter(ch)) {
+      return ch;
+    }
+    const base = (ch === ch.toUpperCase()) ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+    const offset = ch.charCodeAt(0) - base;
+    const newOffset = (((offset + shift) % 26) + 26) % 26;
+    return String.fromCharCode(base + newOffset);
+  }
+
+  function encryptText(text, key) {
+    let encrypted = "";
+    for (const ch of text) {
+      encrypted += shiftLetter(ch, key);
+    }
+    return encrypted;
+  }
+
+  function decryptForward(text, key, logLines) {
+    let decrypted = "";
+
+    for (const current of text) {
+      if (isLetter(current)) {
+        const target = shiftLetter(current, -key);
+        let moving = current;
+        let steps = 0;
+        let path = "";
+
+        while (moving !== target) {
+          moving = shiftLetter(moving, 1);
+          steps++;
+          path += moving;
+          if (path.length > 50) {
+            break;
+          }
+        }
+
+        logLines.push(`${current} -> ${path} -> ${target}  <span class="steps">| used ${steps} move(s)</span>`);
+        decrypted += target;
+      } else {
+        decrypted += current;
+      }
+    }
+
+    return decrypted;
+  }
+
+  function run() {
+    const phrase = document.getElementById('phrase').value;
+    const key = parseInt(document.getElementById('key').value, 10) || 0;
+
+    const encrypted = encryptText(phrase, key);
+    const logLines = [];
+    const decrypted = decryptForward(encrypted, key, logLines);
+
+    document.getElementById('encryptedOut').textContent = encrypted;
+    document.getElementById('decryptedOut').textContent = decrypted;
+
+    const pathLog = document.getElementById('pathLog');
+    pathLog.innerHTML = logLines.map(line => `<div>${line}</div>`).join('');
+
+    document.getElementById('result').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
