@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cipher Toolkit</title>
 <style>
   :root {
@@ -32,6 +33,16 @@
     max-width: 420px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  @media (max-width: 768px) {
+    body { padding: 16px; }
+    .card { padding: 28px 20px; }
+  }
+  @media (max-width: 480px) {
+    body { padding: 12px; }
+    .card { padding: 22px 16px; }
+    h1 { font-size: 1.2rem; }
+    .btn { padding: 14px 12px; font-size: 0.98rem; }
   }
   h1 {
     font-size: 1.5rem;
