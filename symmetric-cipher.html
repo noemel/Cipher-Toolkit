@@ -79,6 +79,22 @@
     transition: opacity 0.15s;
   }
   button:hover { opacity: 0.9; }
+  .nav-link {
+    display: block;
+    margin-top: 14px;
+    padding: 10px 12px;
+    border: 1px solid #3a3a4d;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
   .result {
     margin-top: 22px;
     background: #1a1a26;
@@ -108,11 +124,11 @@
     <p><span>Encrypted:</span> <strong id="encryptedOut"></strong></p>
     <p><span>Decrypted:</span> <strong id="decryptedOut"></strong></p>
   </div>
-</div>
 
-  <a class="btn btn-asymmetric" href="asymmetric-cipher.html">
+  <a class="nav-link" href="asymmetric-cipher.html">
     Asymmetric Cipher
   </a>
+</div>
 
 <script>
   function isLetter(ch) {

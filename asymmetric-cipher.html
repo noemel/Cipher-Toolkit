@@ -81,6 +81,22 @@
     transition: opacity 0.15s;
   }
   button:hover { opacity: 0.9; }
+  .nav-link {
+    display: block;
+    margin-top: 14px;
+    padding: 10px 12px;
+    border: 1px solid #3a3a4d;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
   .result {
     margin-top: 22px;
     background: #1a1a26;
@@ -132,11 +148,11 @@
     <h2>Decryption (move forward until the correct letter):</h2>
     <div class="path-log" id="pathLog"></div>
   </div>
-</div>
 
-  <a class="btn btn-symmetric" href="symmetric-cipher.html">
+  <a class="nav-link" href="symmetric-cipher.html">
     Symmetric Cipher
   </a>
+</div>
 
 
 <script>
